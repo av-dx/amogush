@@ -50,3 +50,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Assignment PDFs
+OS_Ass_2.pdf
+Tutorial-2.zip
