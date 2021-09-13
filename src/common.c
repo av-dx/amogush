@@ -1,12 +1,56 @@
 #include <common.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <pwd.h>
 #include <string.h>
 
-char *hostname = NULL;
-char *username = NULL;
-char *cwdpath = NULL;
-char *cwddisplay = NULL;
-char *homepath = NULL;
-size_t homepath_len = 0;
+char *hostname;
+char *username;
+char *cwdpath;
+char *cwddisplay;
+char *homepath;
+size_t homepath_len;
+
+char **builtin_cmds;
+const unsigned int NUM_BUILTIN_CMDS = 3;
+
+void init() {
+    // TODO: Add 4096 under assumptions
+    cwdpath = (char *)malloc(4096 * sizeof(char));
+    cwddisplay = (char *)calloc(4096, sizeof(char));
+    homepath = (char *)calloc(4096, sizeof(char));
+
+    getcwd(homepath, 4096);
+    homepath_len = strlen(homepath);
+
+    // TODO: Add 4096 under assumptions
+    hostname = (char *)calloc(64, sizeof(char));
+    if (gethostname(hostname, 64) == -1) {
+        perror("Unable to get host name");
+    } else {
+        hostname[63] = '\0';
+    }
+
+    errno = 0;
+    __uid_t userid = getuid();
+    struct passwd *pw = getpwuid(userid);
+    if (pw != NULL) {
+        int len = strlen(pw->pw_name);
+        username = (char *)calloc(len + 1, sizeof(char));
+        strcpy(username, pw->pw_name);
+    } else if (errno) {
+        perror("Unable to get user name");
+    } else {
+        printf("Unable to get user name : Unknown Error\n");
+    }
+
+    builtin_cmds = (char **)calloc(NUM_BUILTIN_CMDS + 1, sizeof(char *));
+    builtin_cmds[NUM_BUILTIN_CMDS] = (char *)malloc(40 * sizeof(char));
+    strcpy(builtin_cmds[NUM_BUILTIN_CMDS], "hello");
+}
 
 int is_prefix(const char *pfx, const char *str) {
     int p_pos = 0;
