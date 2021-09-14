@@ -69,6 +69,10 @@ int main() {
     return 0;
 }
 
+int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
+    return builtin_cmd_callbacks[cmdid](argc, argv);
+}
+
 void init() {
     // TODO: Add 4096 under assumptions
     cwdpath = (char *)malloc(4096 * sizeof(char));
@@ -109,6 +113,14 @@ void init() {
     builtin_cmd_callbacks[BUILTIN_CD] = &cd;
 }
 
-int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
-    return builtin_cmd_callbacks[cmdid](argc, argv);
+void exitshell(int ret) {
+    free(cwddisplay);
+    free(cwdpath);
+    free(homepath);
+    free(hostname);
+    free(username);
+    // Why not free builtin_cmds elements? Because double quotes are compile time consts
+    free(builtin_cmds);
+    free(builtin_cmd_callbacks);
+    exit(ret);
 }

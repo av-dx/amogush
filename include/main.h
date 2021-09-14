@@ -16,6 +16,8 @@ enum BuiltinsCMD {
 
 void init();
 
+void exitshell(int ret);
+
 int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv);
 
 #endif
