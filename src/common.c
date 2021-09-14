@@ -15,6 +15,7 @@ char *homepath;
 size_t homepath_len;
 
 char **builtin_cmds;
+cmd_callback *builtin_cmd_callbacks;
 const unsigned int NUM_BUILTIN_CMDS = 3;
 
 void init() {
@@ -48,8 +49,14 @@ void init() {
     }
 
     builtin_cmds = (char **)calloc(NUM_BUILTIN_CMDS + 1, sizeof(char *));
-    builtin_cmds[NUM_BUILTIN_CMDS] = (char *)malloc(40 * sizeof(char));
-    strcpy(builtin_cmds[NUM_BUILTIN_CMDS], "hello");
+    builtin_cmds[BUILTIN_CD] = "cd";
+    builtin_cmds[BUILTIN_ECHO] = "echo";
+    builtin_cmds[BUILTIN_LS] = "ls";
+
+}
+
+int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
+    return builtin_cmd_callbacks[cmdid](argc, argv);
 }
 
 int is_prefix(const char *pfx, const char *str) {
