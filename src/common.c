@@ -3,6 +3,7 @@
 
 char *hostname;
 char *username;
+char *lwdpath;
 char *cwdpath;
 char *cwddisplay;
 char *homepath;

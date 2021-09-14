@@ -5,6 +5,7 @@
 
 extern char *hostname;
 extern char *username;
+extern char *lwdpath;
 extern char *cwdpath;
 extern char *cwddisplay;
 extern char *homepath;

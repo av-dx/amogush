@@ -93,12 +93,15 @@ int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
 
 void init() {
     // TODO: Add 4096 under assumptions
+    lwdpath = (char *)malloc(4096 * sizeof(char));
     cwdpath = (char *)malloc(4096 * sizeof(char));
     cwddisplay = (char *)calloc(4096, sizeof(char));
     homepath = (char *)calloc(4096, sizeof(char));
 
     getcwd(homepath, 4096);
     homepath_len = strlen(homepath);
+    strcpy(cwdpath, homepath);
+    strcpy(lwdpath, homepath);
 
     // TODO: Add 4096 under assumptions
     hostname = (char *)calloc(64, sizeof(char));
