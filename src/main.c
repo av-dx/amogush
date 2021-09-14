@@ -18,53 +18,70 @@ const unsigned int NUM_BUILTIN_CMDS = 3;
 int main() {
     init();
 
-    char    *cmd_line;
-    int     cmd_line_len;
-    int     argc;
-    int     argv_size;
-    char    **argv;
-    int     retval;
-    char    *cmd;
-    __ssize_t cmd_buffer_size = 0;
-    // TODO : Add exit condition
+    char    *shell_input;           // Line of input from the shell
+    char    *cmd_line;              // Currently being executed command line
+
+    char    *saveptr_cmd_line;      // saveptr used while extracting command lines from input
+    char    *saveptr_args;          // saveptr used while extracting arguments from cmd_line
+
+    char    **argv;                 // Array of arguments to the current command line (null-terminated)
+    int     argv_size;              // # of arguments space allocated to argument list
+    int     argc;                   // # of arguments to the current command line
+
+    char    *cmd;                   // The command in the command line (Also used as a temp variable internally)
+    int     retval;                 // Value returned from executed command line
+    
+    argv_size = 16;
+    argv = (char **)malloc(argv_size * sizeof(char *)); // Reserve space for 16 args by default
+
+    __ssize_t shell_input_buffer_size = 0;      // Buffer size allocated by getline() to the shell input.
+
     while (1) {
         prompt();
         
-        cmd_line_len = getline(&cmd_line, &cmd_buffer_size, stdin);
-        
-        argc = 0;
-        argv_size = 16;
-        argv = (char **)malloc(16 * sizeof(char *)); // Reserve space for 16 args by default
-        retval = 0;
+        getline(&shell_input, &shell_input_buffer_size, stdin);
 
-        cmd = strtok(cmd_line, " \t\n");
-        argv[argc] = cmd;
-        ++argc;
-        while (cmd != NULL)
-        {
-            cmd = strtok(NULL, " \t\n");
-            argv[argc] = cmd;
-            if ((cmd != NULL) && (++argc >= argv_size)) {
-                argv_size *= 2;
-                argv = (char **)realloc(argv, argv_size * sizeof(char *));
+        cmd_line = strtok_r(shell_input, ";\n", &saveptr_cmd_line);
+        while (cmd_line != NULL) {
+            argc = 0;
+            retval = 0;
+
+            cmd = strtok_r(cmd_line, " \t\n", &saveptr_args);
+            while (cmd != NULL) {
+                argv[argc] = cmd;
+                if ((cmd != NULL) && (++argc >= argv_size)) {
+                    argv_size *= 2;
+                    argv = (char **)realloc(argv, argv_size * sizeof(char *));
+                }
+                cmd = strtok_r(NULL, " \t\n", &saveptr_args);
             }
-        }
-        cmd = argv[0];
-        argv[argc] = NULL;
+            argv[argc] = NULL;
+            cmd = argv[0];
 
-        for (enum BuiltinsCMD i = BUILTIN_LIST_START; i < NUM_BUILTIN_CMDS; ++i) {
-            if (strcmp(cmd, builtin_cmds[i]) == 0) {
-                retval = builtin_cmd_callback(i, argc, argv);
-                if (retval != 0) {
-                    perror(builtin_cmds[i]);
+            if (argc > 0) {
+                if (strcmp(cmd, "exit") == 0) {
+                    free(argv);
+                    free(shell_input);
+                    exitshell(0);
+                }
+
+                for (enum BuiltinsCMD i = BUILTIN_LIST_START; i < NUM_BUILTIN_CMDS; ++i) {
+                    if (strcmp(cmd, builtin_cmds[i]) == 0) {
+                        retval = builtin_cmd_callback(i, argc, argv);
+                        if (retval != 0) {
+                            perror(builtin_cmds[i]);
+                        }
+                    }
                 }
             }
+
+            cmd_line = strtok_r(NULL, ";\n", &saveptr_cmd_line);
         }
-        
+
         // Why not free argv elements? Because cmd_line is the same space as argv elements.
         free(argv);
-        free(cmd_line);
-        cmd_line = NULL;
+        free(shell_input);
+        shell_input = NULL;
     }
     return 0;
 }
