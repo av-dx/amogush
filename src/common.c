@@ -1,5 +1,6 @@
 #include <common.h>
 #include <echo.h>
+#include <cd.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,6 +57,7 @@ void init() {
 
     builtin_cmd_callbacks = malloc(NUM_BUILTIN_CMDS + 1 * sizeof(cmd_callback));
     builtin_cmd_callbacks[BUILTIN_ECHO] = &echo;
+    builtin_cmd_callbacks[BUILTIN_CD] = &cd;
 }
 
 int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
