@@ -61,6 +61,7 @@ int main() {
 
             if (argc > 0) {
                 if (strcmp(cmd, "exit") == 0) {
+                    // Why not free argv elements? Because cmd_line is the same space as argv elements.
                     free(argv);
                     free(shell_input);
                     exitshell(0);
@@ -78,13 +79,8 @@ int main() {
 
             cmd_line = strtok_r(NULL, ";\n", &saveptr_cmd_line);
         }
-
-        // Why not free argv elements? Because cmd_line is the same space as argv elements.
-        free(argv);
-        free(shell_input);
-        shell_input = NULL;
     }
-    return 0;
+    exit(0);
 }
 
 int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
