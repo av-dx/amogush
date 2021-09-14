@@ -11,6 +11,8 @@ void prompt() {
     if (is_prefix(homepath, cwdpath)) {
         cwddisplay[0] = '~';
         strcpy(cwddisplay + 1, cwdpath + homepath_len);
+    } else {
+        strcpy(cwddisplay, cwdpath);
     }
 
     printf("<%s@%s:%s>", username, hostname, cwddisplay);
