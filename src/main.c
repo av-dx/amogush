@@ -28,7 +28,8 @@ int main() {
     int     argv_size;              // # of arguments space allocated to argument list
     int     argc;                   // # of arguments to the current command line
 
-    char    *cmd;                   // The command in the command line (Also used as a temp variable internally)
+    char    *arg;                   // Used as a temp variable internally to hold an argument, do not use.
+    char    *cmd;                   // The main command in the command line
     int     retval;                 // Value returned from executed command line
     
     argv_size = 16;
@@ -46,14 +47,14 @@ int main() {
             argc = 0;
             retval = 0;
 
-            cmd = strtok_r(cmd_line, " \t\n", &saveptr_args);
-            while (cmd != NULL) {
-                argv[argc] = cmd;
-                if ((cmd != NULL) && (++argc >= argv_size)) {
+            arg = strtok_r(cmd_line, " \t\n", &saveptr_args);
+            while (arg != NULL) {
+                argv[argc] = arg;
+                if ((arg != NULL) && (++argc >= argv_size)) {
                     argv_size *= 2;
                     argv = (char **)realloc(argv, argv_size * sizeof(char *));
                 }
-                cmd = strtok_r(NULL, " \t\n", &saveptr_args);
+                arg = strtok_r(NULL, " \t\n", &saveptr_args);
             }
             argv[argc] = NULL;
             cmd = argv[0];
