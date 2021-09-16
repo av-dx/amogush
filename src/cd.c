@@ -9,6 +9,7 @@
 
 int cd(int argc, char **argv) {
     char *dest = NULL;
+    char *resolvedpath = NULL;
     if (argc > 2) {
         errno = E2BIG;
         return 1;
@@ -20,8 +21,12 @@ int cd(int argc, char **argv) {
 
     if (strcmp(dest, "-") == 0) {
         dest = lwdpath;
-    } else if (strcmp(dest, "~") == 0) {
-        dest = homepath;
+    } else if (dest[0] == '~') {
+        // TODO : Consider the case when homepath + argv[1].size > 4096
+        resolvedpath = (char *)malloc(4096 * sizeof(char));
+        strcpy(resolvedpath, homepath);
+        strcat(resolvedpath, dest + 1);
+        dest = resolvedpath;
     }
 
     if (chdir(dest) != 0) {
@@ -30,5 +35,6 @@ int cd(int argc, char **argv) {
     strcpy(lwdpath, cwdpath);
     getcwd(cwdpath, 4096);
 
+    if (resolvedpath != NULL) { free(resolvedpath); }
     return 0;
 }
