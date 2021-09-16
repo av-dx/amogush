@@ -15,10 +15,10 @@ OBJ_FILES = $(patsubst %.c,$(OBJDIR)/%.o, $(SRC))
 all: objdir main
 
 main: $(OBJ_FILES)
-	$(CC) -g $(OBJ_FILES) -o $(EXEC)
+	$(CC) -g -Wall $(OBJ_FILES) -o $(EXEC)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) -c $< -I $(INCDIR) -o $@
+	$(CC) -c -Wall $< -I $(INCDIR) -o $@
 
 objdir:
 	$(MKDIR) $(OBJDIR)
