@@ -60,6 +60,17 @@ int main() {
             cmd = argv[0];
 
             if (argc > 0) {
+                // TODO: Add assumption that & doesn't allow chaining
+                char *lastarg = *(argv + argc - 1);
+                int lastarglen = strlen(lastarg);
+                if (lastarg[lastarglen - 1] == '&') {
+                    printf("Should BG\n");
+                    lastarg[lastarglen - 1] = '\0';
+                    if (lastarglen <= 1) { --argc; }
+                }
+            }
+
+            if (argc > 0) {
                 if (strcmp(cmd, "exit") == 0) {
                     // Why not free argv elements? Because cmd_line is the same space as argv elements.
                     free(argv);
