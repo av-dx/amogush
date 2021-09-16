@@ -4,6 +4,7 @@
 #include <echo.h>
 #include <cd.h>
 #include <printwd.h>
+#include <ls.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -142,6 +143,7 @@ void init() {
     builtin_cmd_callbacks[BUILTIN_ECHO] = &echo;
     builtin_cmd_callbacks[BUILTIN_CD] = &cd;
     builtin_cmd_callbacks[BUILTIN_PWD] = &pwd;
+    builtin_cmd_callbacks[BUILTIN_LS] = &ls;
 }
 
 void exitshell(int ret) {
