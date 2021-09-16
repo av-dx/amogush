@@ -57,3 +57,4 @@ Tutorial-2.zip
 bin/*
 obj/*
 .vscode/
+test.c
