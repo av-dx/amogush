@@ -23,7 +23,7 @@ int cd(int argc, char **argv) {
         dest = lwdpath;
     } else if (dest[0] == '~') {
         // TODO : Consider the case when homepath + argv[1].size > 4096
-        resolvedpath = (char *)malloc(4096 * sizeof(char));
+        resolvedpath = malloc(sizeof(*resolvedpath) * 4096);
         strcpy(resolvedpath, homepath);
         strcat(resolvedpath, dest + 1);
         dest = resolvedpath;

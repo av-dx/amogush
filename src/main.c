@@ -35,7 +35,7 @@ int main() {
     int     retval;                 // Value returned from executed command line
     
     argv_size = 16;
-    argv = (char **)malloc(argv_size * sizeof(char *)); // Reserve space for 16 args by default
+    argv = malloc(sizeof(*argv) * argv_size); // Reserve space for 16 args by default
 
     size_t shell_input_buffer_size = 0;      // Buffer size allocated by getline() to the shell input.
 
@@ -54,7 +54,7 @@ int main() {
                 argv[argc] = arg;
                 if ((arg != NULL) && (++argc >= argv_size)) {
                     argv_size *= 2;
-                    argv = (char **)realloc(argv, argv_size * sizeof(char *));
+                    argv = realloc(argv, sizeof(*argv) * argv_size);
                 }
                 arg = strtok_r(NULL, " \t\n", &saveptr_args);
             }
@@ -102,10 +102,10 @@ int builtin_cmd_callback(enum BuiltinsCMD cmdid, int argc, char **argv) {
 
 void init() {
     // TODO: Add 4096 under assumptions
-    lwdpath = (char *)malloc(4096 * sizeof(char));
-    cwdpath = (char *)malloc(4096 * sizeof(char));
-    cwddisplay = (char *)calloc(4096, sizeof(char));
-    homepath = (char *)calloc(4096, sizeof(char));
+    lwdpath = malloc(sizeof(*lwdpath) * 4096);
+    cwdpath = malloc(sizeof(*cwdpath) * 4096);
+    cwddisplay = calloc(4096, sizeof(*cwddisplay));
+    homepath = calloc(4096, sizeof(*homepath));
 
     getcwd(homepath, 4096);
     homepath_len = strlen(homepath);
@@ -113,7 +113,7 @@ void init() {
     strcpy(lwdpath, homepath);
 
     // TODO: Add 4096 under assumptions
-    hostname = (char *)calloc(64, sizeof(char));
+    hostname = calloc(64, sizeof(*hostname));
     if (gethostname(hostname, 64) == -1) {
         perror("Unable to get host name");
     } else {
@@ -125,7 +125,7 @@ void init() {
     struct passwd *pw = getpwuid(userid);
     if (pw != NULL) {
         int len = strlen(pw->pw_name);
-        username = (char *)calloc(len + 1, sizeof(char));
+        username = calloc(len + 1, sizeof(*username));
         strcpy(username, pw->pw_name);
     } else if (errno) {
         perror("Unable to get user name");
@@ -133,13 +133,13 @@ void init() {
         printf("Unable to get user name : Unknown Error\n");
     }
 
-    builtin_cmds = (char **)calloc(NUM_BUILTIN_CMDS + 1, sizeof(char *));
+    builtin_cmds = calloc(NUM_BUILTIN_CMDS + 1, sizeof(*builtin_cmds));
     builtin_cmds[BUILTIN_CD] = "cd";
     builtin_cmds[BUILTIN_ECHO] = "echo";
     builtin_cmds[BUILTIN_LS] = "ls";
     builtin_cmds[BUILTIN_PWD] = "pwd";
 
-    builtin_cmd_callbacks = malloc(NUM_BUILTIN_CMDS + 1 * sizeof(cmd_callback));
+    builtin_cmd_callbacks = malloc(NUM_BUILTIN_CMDS + 1 * sizeof(*builtin_cmd_callbacks));
     builtin_cmd_callbacks[BUILTIN_ECHO] = &echo;
     builtin_cmd_callbacks[BUILTIN_CD] = &cd;
     builtin_cmd_callbacks[BUILTIN_PWD] = &pwd;
