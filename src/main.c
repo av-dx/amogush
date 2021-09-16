@@ -37,7 +37,7 @@ int main() {
     argv_size = 16;
     argv = (char **)malloc(argv_size * sizeof(char *)); // Reserve space for 16 args by default
 
-    __ssize_t shell_input_buffer_size = 0;      // Buffer size allocated by getline() to the shell input.
+    size_t shell_input_buffer_size = 0;      // Buffer size allocated by getline() to the shell input.
 
     while (1) {
         prompt();
