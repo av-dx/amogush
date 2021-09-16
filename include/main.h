@@ -11,6 +11,7 @@ enum BuiltinsCMD {
     BUILTIN_CD,
     BUILTIN_LS,
     BUILTIN_ECHO,
+    BUILTIN_PWD,
     BUILTIN_LIST_START = 0,
 };
 
