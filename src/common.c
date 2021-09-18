@@ -1,5 +1,6 @@
 #include <common.h>
 #include <string.h>
+#include <stdio.h>
 
 char *hostname;
 char *username;
@@ -15,4 +16,10 @@ int is_prefix(const char *pfx, const char *str) {
         return 1;
     }
     return 0;
+}
+
+void printargs(int argc, char **argv) {
+    for (int i = 0; i < argc; ++i) {
+        printf("Argument %d: %s\n", i, argv[i]);
+    }
 }
