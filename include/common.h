@@ -1,8 +1,6 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
-#define CHECK_NULL_FREE(x) if (x != NULL) {free(x);}
-
 #include <sys/types.h>
 
 extern char *hostname;
