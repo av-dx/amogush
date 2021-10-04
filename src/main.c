@@ -4,6 +4,7 @@
 #include <echo.h>
 #include <cd.h>
 #include <printwd.h>
+#include <pinfo.h>
 #include <ls.h>
 
 #include <stdio.h>
@@ -15,7 +16,7 @@
 
 char **builtin_cmds;
 cmd_callback *builtin_cmd_callbacks;
-const unsigned int NUM_BUILTIN_CMDS = 4;
+const unsigned int NUM_BUILTIN_CMDS = 5;
 
 int main() {
     init();
@@ -138,12 +139,14 @@ void init() {
     builtin_cmds[BUILTIN_ECHO] = "echo";
     builtin_cmds[BUILTIN_LS] = "ls";
     builtin_cmds[BUILTIN_PWD] = "pwd";
+    builtin_cmds[BUILTIN_PINFO] = "pinfo";
 
     builtin_cmd_callbacks = malloc(NUM_BUILTIN_CMDS + 1 * sizeof(*builtin_cmd_callbacks));
     builtin_cmd_callbacks[BUILTIN_ECHO] = &echo;
     builtin_cmd_callbacks[BUILTIN_CD] = &cd;
     builtin_cmd_callbacks[BUILTIN_PWD] = &pwd;
     builtin_cmd_callbacks[BUILTIN_LS] = &ls;
+    builtin_cmd_callbacks[BUILTIN_PINFO] = &pinfo;
 }
 
 void exitshell(int ret) {
