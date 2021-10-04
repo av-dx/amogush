@@ -151,12 +151,19 @@ void init() {
 
 void exitshell(int ret) {
     free(cwddisplay);
+    cwddisplay = NULL;
     free(cwdpath);
+    cwdpath = NULL;
     free(homepath);
+    homepath = NULL;
     free(hostname);
+    hostname = NULL;
     free(username);
+    username = NULL;
     // Why not free builtin_cmds elements? Because double quotes are compile time consts
     free(builtin_cmds);
+    builtin_cmds = NULL;
     free(builtin_cmd_callbacks);
+    builtin_cmd_callbacks = NULL;
     exit(ret);
 }
